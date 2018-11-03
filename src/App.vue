@@ -3,49 +3,49 @@
     <div class="logo">SubscriberAdmin</div>
     <div class="container">
       <div class="child-container">
+        <div v-if="showError" class="error-message">
+          {{error}}
+        </div>
         <form action="">
           <div class="form-group">
             <h3 class="label">目的地</h3>
-            <input name="destination" type="text">
+            <input name="destination" type="text" v-model="destination">
           </div>
           <div class="form-group">
             <h3 class="label">起始時間</h3>
-            <input type="text" name="from">
+            <input type="text" name="from" v-model="start_date">
           </div>
           <div class="form-group">
             <h3 class="label">結束時間</h3>
-            <input type="text" name="end">
+            <input type="text" name="end" v-model="end_date">
           </div>
           <div class="form-group">
             <h3 class="label">通知價格</h3>
-            <input type="text" name="notified-price">
+            <input type="text" name="notified-price" v-model="notified_price">
           </div>
-          <button type="button" @click="show">新增</button>
+          <button type="button" @click="update">新增</button>
         </form>
       </div>
-      {{showSetting}}
       <div class="child-container white-background" v-if="!showSetting">
         資料讀取中...
       </div>
       <div class="child-container white-background" v-if="showSetting">
-        <div>
-          <table v-for="(item, index) in this.$store.state.settings"  v-bind:key="index">
+          <table class="setting-list-table">
             <tr>
               <th>目的地</th>
               <th>搜尋起始日</th>
               <th>搜尋終止日</th>
               <th>通知價格</th>
             </tr>
-            <tr>
+            <tr v-for="(item, index) in this.$store.state.settings"  v-bind:key="index">
               <th>{{item.destination}}</th>
               <th>{{item.start_date}}</th>
               <th>{{item.end_date}}</th>
               <th>{{item.notify_price}}</th>
+              <th><button @click="deleteDate">刪除</button></th>
             </tr>
           </table>
-        </div>
       </div>
-      {{this.$store.state.settings}}
     </div>
     <!-- <mainComponent/> -->
   </div>
@@ -53,6 +53,7 @@
 
 <script>
 import mainComponent from './components/MainComponent.vue'
+import axios from 'axios'
 
 export default {
   name: 'app',
@@ -63,21 +64,49 @@ export default {
     //initialize store data structure by submitting action.
     this.$store.commit("getSetting")
  },
-  // data: function() {
-    
-  // },
+  data: function() {
+    return {
+      destination: '',
+      start_date: '',
+      end_date: '',
+      notified_price: '',
+      error: ''
+    }
+  },
   methods: {
     update: function(e) {
       e.preventDefault
-      this.count = e
+      axios.post('http://subscriber-api.herokuapp.com/api/v1/subscriber',
+      {
+        'destination': this.destination,
+        'start_date': this.start_date,
+        'end_date': this.end_date,
+        'notified_price': this.notified_price
+      }
+      ).then(()=>{
+          this.error = ''
+          this.$store.commit("getSetting")
+        }).catch((response)=>{
+          this.error = response.body
+        })
     },
     show: function() {
       this.$store.commit("getSetting")
+    },
+    deleteDate: function() {
+      axios.delete('http://subscriber-api.herokuapp.com/api/v1/subscriber/' + this.destination).then(()=>{
+            this.$store.commit("getSetting")
+          }).catch(()=>{
+            this.error = "something wrong"
+          })
     }
   },
   computed: {
     showSetting: function() {
       return this.$store.state.settings.length > 0
+    },
+    showError: function() {
+      return this.error.length > 0
     }
   }
 }
@@ -122,6 +151,17 @@ input{
 }
 
 .white-background {
-  background-color: antiquewhite
+  background-color: whitesmoke;
+}
+
+.setting-list-table {
+  width: 100%;
+  font-size: 15pt;
+}
+
+.error-message {
+  color: red;
+  font-size: 20px;
+  
 }
 </style>
