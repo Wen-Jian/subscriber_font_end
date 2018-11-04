@@ -76,7 +76,7 @@ export default {
   methods: {
     update: function(e) {
       e.preventDefault
-      axios.post('http://subscriber-api.herokuapp.com/api/v1/subscriber',
+      axios.post('https://subscriber-api.herokuapp.com/api/v1/subscriber',
       {
         'destination': this.destination,
         'start_date': this.start_date,
@@ -94,7 +94,7 @@ export default {
       this.$store.commit("getSetting")
     },
     deleteDate: function(destination) {
-      axios.delete('http://subscriber-api.herokuapp.com/api/v1/subscriber/' + destination).then(()=>{
+      axios.delete('https://subscriber-api.herokuapp.com/api/v1/subscriber/' + destination).then(()=>{
             this.$store.commit("getSetting")
           }).catch(()=>{
             this.error = "something wrong"
