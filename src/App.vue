@@ -23,6 +23,10 @@
             <h3 class="label">通知價格</h3>
             <input type="text" name="notified-price" v-model="notified_price">
           </div>
+          <div class="form-group">
+            <h3 class="label">航班類型</h3>
+            <input type="text" name="notified-price" v-model="flight_type">
+          </div>
           <button type="button" @click="update">新增</button>
         </form>
       </div>
