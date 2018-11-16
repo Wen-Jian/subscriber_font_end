@@ -36,12 +36,14 @@
               <th>搜尋起始日</th>
               <th>搜尋終止日</th>
               <th>通知價格</th>
+              <th>航班類型</th>
             </tr>
             <tr v-for="(item, index) in this.$store.state.settings"  v-bind:key="index">
               <th>{{item.destination}}</th>
               <th>{{item.start_date}}</th>
               <th>{{item.end_date}}</th>
               <th>{{item.notify_price}}</th>
+              <th>{{item.flight_type}}</th>
               <th><button @click="deleteDate(item.destination)">刪除</button></th>
             </tr>
           </table>
@@ -81,7 +83,8 @@ export default {
         'destination': this.destination,
         'start_date': this.start_date,
         'end_date': this.end_date,
-        'notified_price': this.notified_price
+        'notified_price': this.notified_price,
+        'flight_type': this.flight_type
       }
       ).then(()=>{
           this.error = ''
