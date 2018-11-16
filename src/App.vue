@@ -44,7 +44,7 @@
               <th>{{item.end_date}}</th>
               <th>{{item.notify_price}}</th>
               <th>{{item.flight_type}}</th>
-              <th><button @click="deleteDate(item.destination)">刪除</button></th>
+              <th><button @click="deleteDate(item.id)">刪除</button></th>
             </tr>
           </table>
       </div>
@@ -96,8 +96,8 @@ export default {
     show: function() {
       this.$store.commit("getSetting")
     },
-    deleteDate: function(destination) {
-      axios.delete('https://subscriber-api.herokuapp.com/api/v1/subscriber/' + destination).then(()=>{
+    deleteDate: function(id) {
+      axios.delete('https://subscriber-api.herokuapp.com/api/v1/subscriber/' + id).then(()=>{
             this.$store.commit("getSetting")
           }).catch(()=>{
             this.error = "something wrong"
