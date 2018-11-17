@@ -27,6 +27,10 @@
             <h3 class="label">航班類型</h3>
             <input type="text" name="notified-price" v-model="flight_type">
           </div>
+          <div class="form-group">
+            <h3 class="label">來回/單程</h3>
+            <input type="text" name="notified-price" v-model="ticket_type">
+          </div>
           <button type="button" @click="update">新增</button>
         </form>
       </div>
@@ -76,6 +80,8 @@ export default {
       start_date: '',
       end_date: '',
       notified_price: '',
+      flight_type: '',
+      ticket_type: '',
       error: ''
     }
   },
@@ -88,7 +94,8 @@ export default {
         'start_date': this.start_date,
         'end_date': this.end_date,
         'notified_price': this.notified_price,
-        'flight_type': this.flight_type
+        'flight_type': this.flight_type,
+        'ticket_type': this.ticket_type
       }
       ).then(()=>{
           this.error = ''
