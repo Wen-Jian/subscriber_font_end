@@ -45,6 +45,7 @@
               <th>搜尋終止日</th>
               <th>通知價格</th>
               <th>航班類型</th>
+              <th>機票類型</th>
             </tr>
             <tr v-for="(item, index) in this.$store.state.settings"  v-bind:key="index">
               <th>{{item.destination}}</th>
@@ -52,6 +53,7 @@
               <th>{{item.end_date}}</th>
               <th>{{item.notify_price}}</th>
               <th>{{item.flight_type}}</th>
+              <th>{{item.ticket_type}}</th>
               <th><button @click="deleteDate(item.id)">刪除</button></th>
             </tr>
           </table>
