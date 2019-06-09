@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" style="margin-top: 20px;">
     <div class="logo">SubscriberAdmin</div>
     <div class="container">
       <div class="child-container">
@@ -7,37 +7,84 @@
           {{error}}
         </div>
         <form action="">
-          <div class="form-group">
-            <h3 class="label">目的地</h3>
-            <input name="destination" type="text" v-model="destination">
+          <div class="form-group"  style="display: block; margin: 0 auto; width: 80%;">
+            <!-- <h3 class="label">目的地</h3> -->
+            <!-- <input name="destination" type="text" v-model="destination"> -->
+            <md-field>
+              <label>目的地</label>
+              <md-input v-model="destination"></md-input>
+              <span class="md-helper-text">Helper text</span>
+            </md-field>
           </div>
-          <div class="form-group">
-            <h3 class="label">起始時間</h3>
-            <input type="text" name="from" v-model="start_date">
+          <div class="form-group rows" style="margin-top: 10px;">
+            <!-- <h3 class="label">起始時間</h3> -->
+            <!-- <input type="text" name="from" id="datepicker" v-model="start_date"> -->
+            <!-- <datepicker v-model="start_date" name="from" style="display: inline-block; width: 70%;"></datepicker> -->
+            <md-datepicker v-model="start_date">
+              <label>起始時間</label>
+            </md-datepicker>
           </div>
-          <div class="form-group">
-            <h3 class="label">結束時間</h3>
-            <input type="text" name="end" v-model="end_date">
+          <div class="form-group rows">
+            <!-- <h3 class="label">結束時間</h3> -->
+            <!-- <input type="text" name="end" v-model="end_date"> -->
+            <!-- <datepicker v-model="end_date" name="end" style="display: inline-block; width: 70%;" ></datepicker> -->
+            <md-datepicker v-model="end_date">
+              <label>結束時間</label>
+            </md-datepicker>
           </div>
-          <div class="form-group">
-            <h3 class="label">通知價格</h3>
-            <input type="text" name="notified-price" v-model="notified_price">
+          <div class="form-group rows">
+            <!-- <h3 class="label">通知價格</h3> -->
+            <!-- <input type="text" name="notified-price" v-model="notified_price"> -->
+            <md-field>
+              <label>通知價格</label>
+              <md-input v-model="notified_price" type="number"></md-input>
+            </md-field>
           </div>
-          <div class="form-group">
-            <h3 class="label">航班類型</h3>
-            <input type="text" name="notified-price" v-model="flight_type">
+          <div class="form-group rows">
+            <!-- <h3 class="label">航班類型</h3> -->
+            <!-- <input type="text" name="notified-price" v-model="flight_type"> -->
+            <!-- <div class="md-layout-item" style="display: inline-block;">
+              <md-field>
+                <md-select v-model="flight_type" name="country" id="country" md-dense>
+                  <md-option value="1">直飛</md-option>
+                  <md-option value="2">轉機</md-option>
+                </md-select>
+              </md-field>
+            </div> -->
+            <md-field>
+              <label>航班類型</label>
+              <md-select v-model="flight_type">
+                <md-option value="1">直飛</md-option>
+                <md-option value="2">轉機</md-option>
+              </md-select>
+            </md-field>
           </div>
-          <div class="form-group">
-            <h3 class="label">來回/單程</h3>
-            <input type="text" name="notified-price" v-model="ticket_type">
+          <div class="form-group rows">
+            <!-- <h3 class="label">機票類型</h3> -->
+            <!-- <input type="text" name="notified-price" v-model="ticket_type"> -->
+            <!-- <div class="md-layout-item" style="display: inline-block;">
+              <md-field>
+                <md-select v-model="ticket_type" name="country" id="country" md-dense >
+                  <md-option value="1">單程</md-option>
+                  <md-option value="2">來回</md-option>
+                </md-select>
+              </md-field>
+            </div> -->
+            <md-field>
+              <label>航班類型</label>
+              <md-select v-model="ticket_type">
+                <md-option value="1">單程</md-option>
+                <md-option value="2">來回</md-option>
+              </md-select>
+            </md-field>
           </div>
-          <button type="button" @click="update">新增</button>
+          <md-button class="md-raised md-primary" style="display: block; margin: 0 auto; width: 50%;" @click="update" :disabled="btn_disable_flag">新增</md-button>
         </form>
       </div>
       <div class="child-container white-background" v-if="!showSetting">
         資料讀取中...
       </div>
-      <div class="child-container white-background" v-if="showSetting">
+      <div class="white-background" v-if="showSetting">
           <table class="setting-list-table">
             <tr>
               <th>目的地</th>
@@ -66,11 +113,13 @@
 <script>
 import mainComponent from './components/MainComponent.vue'
 import axios from 'axios'
+import Datepicker from 'vuejs-datepicker'
 
 export default {
   name: 'app',
   components: {
-    mainComponent
+    mainComponent,
+    Datepicker
   },
   created(){
     //initialize store data structure by submitting action.
@@ -84,13 +133,15 @@ export default {
       notified_price: '',
       flight_type: '',
       ticket_type: '',
-      error: ''
+      error: '',
+      btn_disable_flag: false
     }
   },
   methods: {
     update: function(e) {
       e.preventDefault
-      axios.post('https://subscriber-api.herokuapp.com/api/v1/subscriber',
+      this.btn_disable_flag = true
+      axios.post('https://subscriber-api.herokuapp.com/api/v1/subscribers',
       {
         'destination': this.destination,
         'start_date': this.start_date,
@@ -102,6 +153,7 @@ export default {
       ).then(()=>{
           this.error = ''
           this.$store.commit("getSetting")
+          this.btn_disable_flag = false
         }).catch((response)=>{
           this.error = response.body
         })
@@ -110,7 +162,7 @@ export default {
       this.$store.commit("getSetting")
     },
     deleteDate: function(id) {
-      axios.delete('https://subscriber-api.herokuapp.com/api/v1/subscriber/' + id).then(()=>{
+      axios.delete('https://subscriber-api.herokuapp.com/api/v1/subscribers/' + id).then(()=>{
             this.$store.commit("getSetting")
           }).catch(()=>{
             this.error = "something wrong"
@@ -150,11 +202,14 @@ export default {
   margin-right: 5%;
 }
 .child-container {
-  background-color: steelblue;
+  background-color: rgb(200, 225, 248);
+  margin-top: 10px;
+  height: 380px;
 }
 .label {
   display: inline-block;
   margin-right: 30px;
+  width: 20%;
   color: white;
 }
 .form-group {
@@ -167,7 +222,8 @@ input{
 }
 
 .white-background {
-  background-color: whitesmoke;
+  background-color: rgb(214, 213, 213);
+  margin-top: 50px;
 }
 
 .setting-list-table {
@@ -179,5 +235,9 @@ input{
   color: red;
   font-size: 20px;
   
+}
+
+.rows {
+  text-align: left;
 }
 </style>

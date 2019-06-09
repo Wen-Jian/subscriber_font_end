@@ -16,7 +16,7 @@ export default new vuex.Store({
         settings: []
     },
     mutations: {
-        getSetting: state => axios.get('https://subscriber-api.herokuapp.com/api/v1/subscriber').then((response)=>{
+        getSetting: state => axios.get('https://subscriber-api.herokuapp.com/api/v1/subscribers').then((response)=>{
             state.settings = response.data;
           }).catch((response)=>{
             response;
